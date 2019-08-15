@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<strings.h>
 #include<math.h>
+#include<stdarg.h>
 
 
 int myatoi(char *str)
@@ -89,6 +90,69 @@ void rab_karp(char *text, char *pat)
 }
 
 
+void myitoa(int i, char *buf, int base)
+{
+	char *str = "0123456789abcdef";
+
+	int size = 64;
+	buf[--size] = '\0';
+	
+	while(i)
+	{
+		buf[--size] = str[i%base];
+		i = i/base;		
+	}
+
+	puts(buf+size);	
+}
+
+void my_printf(char *fmt,... )
+{
+	va_list argp;
+	int d;
+	char c, *s;
+	char buf[64];
+
+	va_start(argp, fmt);
+
+	while(*fmt)
+	{
+		if(*fmt != '%') {
+			putc(*fmt, stderr);
+			fmt++;
+			continue;
+		}
+		fmt++;
+			
+		switch(*fmt++)
+		{
+			case 'o':
+				d = va_arg(argp,int);
+				myitoa(d,buf,8); 
+				//puts(buf);
+				break;
+			case 'x':
+				d = va_arg(argp,int);
+				myitoa(d,buf,16); 
+				//puts(buf);
+				break;
+			case 'd':
+				d = va_arg(argp,int);
+				myitoa(d,buf,10); 
+				//puts(buf);
+				break;
+			case 'c':
+				c = (char)va_arg(argp,int);
+				putc(c,stderr);
+				break;
+			case 's':
+				s = va_arg(argp, char*);
+				puts(s);
+				break;
+		}
+	}	
+	va_end(argp);	
+}
 
 int main()
 {
@@ -99,7 +163,8 @@ int main()
 	//printf("%d\n",d);
 	//mystrstr(str,"oho" );
 	//rab_karp(str,"oho" );
-	my_printf();
+	d=256;
+	my_printf("str %s int %d 0x%x %o\n",str,d,d,d);
 	printf("\n");
 	return 0;
 }
